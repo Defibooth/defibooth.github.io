@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@600;700&family=Wix+Madefor+Text:wght@400;600&display=swap">
+<title>Demande de référencement – Trouver mon photobooth | Defibooth</title>
+<style>
+:root{--fg:#1a1a1a;--muted:#4d4d4d;--line:#e3d6c8;--soft:#fdfbf7;--page:#f6f1ea;--navy:#173a7a;--accent-soft:#e8eef8;--orange:#c43d22;--err:#b3261e;--ok:#1e7a3c;--r:18px}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--page);color:var(--fg);font-family:"Wix Madefor Text",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.45}
+.wrap{max-width:640px;margin:0 auto;padding:28px 16px 48px}
+.logo{display:block;text-align:center;font-family:"Wix Madefor Display",sans-serif;font-weight:700;font-size:22px;color:var(--navy);text-decoration:none;margin-bottom:18px}
+.eyebrow{text-align:center;color:var(--orange);font-family:"Wix Madefor Display",sans-serif;font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:14px;margin:0 0 6px}
+h1{font-family:"Wix Madefor Display",sans-serif;text-align:center;color:var(--navy);font-size:clamp(26px,5vw,38px);font-weight:700;margin:0 0 10px;line-height:1.15}
+.lead{text-align:center;color:var(--muted);margin:0 auto 24px;max-width:52ch}
+form,.merci{background:var(--soft);border-radius:var(--r);box-shadow:0 4px 18px rgba(23,58,122,.07);padding:22px 20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}
+.full{grid-column:1/-1}
+label{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14px;color:var(--navy)}
+label small{font-weight:400;color:var(--muted)}
+input{font:inherit;font-size:16px;width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--fg)}
+input:focus{outline:2px solid var(--navy);outline-offset:1px;border-color:transparent}
+input.invalide{border-color:var(--err)}
+.err{color:var(--err);font-size:13px;font-weight:400;min-height:0}
+.case{flex-direction:row;align-items:flex-start;gap:10px;font-weight:400;color:var(--fg);font-size:14px;margin-top:4px}
+.case input{width:18px;height:18px;margin-top:2px;flex:none;accent-color:var(--navy)}
+button{display:block;width:100%;margin-top:18px;border:0;border-radius:999px;background:var(--navy);color:#fff;font:inherit;font-weight:600;font-size:16px;padding:13px 20px;cursor:pointer}
+button:disabled{opacity:.6;cursor:default}
+.note{font-size:12.5px;color:var(--muted);margin:14px 0 0}
+.global{color:var(--err);font-size:14px;margin:12px 0 0}
+.merci{text-align:center}
+.merci h2{font-family:"Wix Madefor Display",sans-serif;color:var(--ok);margin:0 0 8px}
+.retour{display:block;text-align:center;margin-top:18px;color:var(--navy)}
+.hp{position:absolute;left:-9999px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="logo" href="https://www.defibooth.fr" target="_top">Defibooth</a>
+  <p class="eyebrow">Trouver mon photobooth</p>
+  <h1>Demande de référencement</h1>
+  <p class="lead">Vous louez un photobooth ? Remplissez ce formulaire pour apparaître gratuitement dans notre annuaire des loueurs en France.</p>
+
+  <form id="form" novalidate>
+    <div class="grid">
+      <label>Nom<input id="nom" name="Nom" autocomplete="family-name" required><span class="err" id="err-nom"></span></label>
+      <label>Prénom<input id="prenom" name="Prénom" autocomplete="given-name" required><span class="err" id="err-prenom"></span></label>
+      <label class="full">Nom de la société<input id="societe" name="Société" autocomplete="organization" required><span class="err" id="err-societe"></span></label>
+      <label>SIRET <small>14 chiffres</small><input id="siret" name="SIRET" inputmode="numeric" required><span class="err" id="err-siret"></span></label>
+      <label>Ville et code postal<input id="ville" name="Ville et code postal" placeholder="Ex. : Alès 30100" required><span class="err" id="err-ville"></span></label>
+      <label>Adresse e-mail<input id="email" name="E-mail" type="email" autocomplete="email" required><span class="err" id="err-email"></span></label>
+      <label>Téléphone <small>facultatif</small><input id="tel" name="Téléphone" type="tel" autocomplete="tel"></label>
+      <label class="full">Site internet <small>facultatif</small><input id="site" name="Site internet" type="url" placeholder="www.votre-site.fr" autocomplete="url"></label>
+      <label class="case full"><input id="accord" type="checkbox" required><span>J'accepte que le nom de ma société, ma ville, mon site internet, mon téléphone et mon e-mail apparaissent dans l'annuaire « Trouver mon photobooth » de Defibooth.</span></label>
+      <span class="err full" id="err-accord"></span>
+    </div>
+    <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <button type="submit" id="envoyer">Envoyer ma demande</button>
+    <p class="global" id="global" role="alert" hidden></p>
+    <p class="note">Vos informations servent uniquement à créer votre fiche dans l'annuaire. Vous pouvez demander à tout moment sa modification ou sa suppression en écrivant à contact@defibooth.fr.</p>
+  </form>
+
+  <div class="merci" id="merci" role="status" hidden>
+    <h2>Merci, c'est envoyé !</h2>
+    <p>Votre demande de référencement a bien été reçue. Votre fiche sera ajoutée à l'annuaire après vérification.</p>
+  </div>
+
+  <a class="retour" href="https://www.defibooth.fr" target="_top">Retour au site Defibooth</a>
+</div>
+
+<script>
+  // Les demandes sont envoyées par Web3Forms à l'adresse liée à cette clé (contact@defibooth.fr).
+  const CLE_WEB3FORMS = 'f6d35079-afc8-401d-8d4b-0523a2e324b2';
+
+  const $ = id => document.getElementById(id);
+  const val = id => $(id).value.replace(/\s+/g, ' ').trim();
+  function erreur(id, msg) {
+    $('err-' + id).textContent = msg || '';
+    if ($(id).type !== 'checkbox') $(id).classList.toggle('invalide', !!msg);
+    return !msg;
+  }
+  function valider() {
+    const tests = [
+      ['nom', val('nom').length >= 2, 'Indiquez votre nom.'],
+      ['prenom', val('prenom').length >= 2, 'Indiquez votre prénom.'],
+      ['societe', val('societe').length >= 2, 'Indiquez le nom de votre société.'],
+      ['siret', /^\d{14}$/.test(val('siret').replace(/\s/g, '')), 'Le SIRET doit contenir 14 chiffres.'],
+      ['ville', val('ville').length >= 2, 'Indiquez votre ville et votre code postal.'],
+      ['email', /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val('email')), 'Indiquez une adresse e-mail valide.'],
+      ['accord', $('accord').checked, 'Merci de cocher cette case pour apparaître dans l\'annuaire.']
+    ];
+    let premier = null;
+    tests.forEach(([id, ok, msg]) => { if (!erreur(id, ok ? '' : msg) && !premier) premier = $(id); });
+    if (premier) premier.focus();
+    return !premier;
+  }
+
+  $('form').addEventListener('submit', async e => {
+    e.preventDefault();
+    $('global').hidden = true;
+    if (!valider()) return;
+    if (e.target.botcheck.checked) return;
+    const btn = $('envoyer'); btn.disabled = true; btn.textContent = 'Envoi en cours…';
+    const donnees = {
+      access_key: CLE_WEB3FORMS,
+      subject: 'Demande de référencement annuaire – ' + val('societe'),
+      from_name: 'Annuaire Trouver mon photobooth',
+      replyto: val('email'),
+      'Nom': val('nom'),
+      'Prénom': val('prenom'),
+      'Société': val('societe'),
+      'SIRET': val('siret').replace(/\s/g, ''),
+      'Ville et code postal': val('ville'),
+      'E-mail': val('email'),
+      'Téléphone': val('tel') || '—',
+      'Site internet': val('site') || '—',
+      'Accord pour la publication dans l\'annuaire': 'Oui, le ' + new Date().toLocaleString('fr-FR')
+    };
+    try {
+      const r = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(donnees)
+      });
+      const res = await r.json().catch(() => ({}));
+      if (!r.ok || !res.success) throw new Error(res.message || 'Envoi impossible');
+      $('form').hidden = true; $('merci').hidden = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+      $('global').textContent = "L'envoi n'a pas fonctionné. Réessayez dans un instant, ou écrivez-nous à contact@defibooth.fr.";
+      $('global').hidden = false;
+      btn.disabled = false; btn.textContent = 'Envoyer ma demande';
+    }
+  });
+</script>
+</body>
+</html>
