@@ -31,6 +31,13 @@ input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px;bord
 .links{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:6px}
 .links a{font-size:13px;text-decoration:none;color:var(--accent);background:var(--accent-soft);padding:5px 10px;border-radius:999px;white-space:nowrap}
 .links a:hover{background:var(--accent);color:#fff}
+.pager{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;margin-top:22px}
+.pg{font:inherit;font-size:14px;border:0;background:#fff;color:var(--navy);min-width:40px;height:40px;padding:0 12px;border-radius:999px;cursor:pointer;box-shadow:0 2px 8px rgba(23,58,122,.08)}
+.pg:hover:not(:disabled){background:var(--accent-soft)}
+.pg[aria-current="page"]{background:var(--navy);color:#fff;font-weight:600}
+.pg:disabled{opacity:.35;cursor:default}
+.gap{color:var(--muted);padding:0 2px}
+.pginfo{width:100%;text-align:center;font-size:13px;color:var(--muted);margin-top:4px}
 .more{display:block;margin:24px auto 0;border:0;color:#fff;background:var(--navy);font-weight:600;border-radius:999px;padding:10px 22px;font:inherit;cursor:pointer}
 .empty{padding:30px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--r)}
 .layout{display:grid;grid-template-columns:440px 1fr;gap:24px;align-items:start}
@@ -73,7 +80,7 @@ input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px;bord
     <div>
       <p class="count" id="count"></p>
       <div class="grid" id="list"></div>
-      <button class="more" id="more" hidden>Afficher plus de loueurs</button>
+      <nav class="pager" id="pager" aria-label="Pages de résultats"></nav>
     </div>
   </div>
 
@@ -91,7 +98,7 @@ function norm(s){return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 const $=id=>document.getElementById(id);
 const regions=[...new Set(rows.map(r=>r.r).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"fr"));
-let reg="",dep="",q="",shown=48;
+let reg="",dep="",q="",page=1;const PER=10;
 $("reg").innerHTML+=regions.map(r=>`<option>${esc(r)}</option>`).join("");
 function drawChips(){$("chips").innerHTML=[`<button class="chip" data-r="" aria-pressed="${!reg}">Toute la France</button>`].concat(regions.map(r=>`<button class="chip" data-r="${esc(r)}" aria-pressed="${reg===r}">${esc(r)}</button>`)).join("")}
 function drawDeps(){const ds=[...new Set(rows.filter(r=>!reg||r.r===reg).map(r=>r.d).filter(Boolean))].sort();
@@ -103,16 +110,24 @@ function render(){
   const terms=norm(q).split(/\s+/).filter(Boolean);
   const f=rows.filter(r=>(!reg||r.r===reg)&&(!dep||r.d===dep)&&terms.every(t=>r.k.includes(t)));
   $("count").innerHTML=f.length?`<b>${f.length}</b> loueur${f.length>1?"s":""} de photobooth trouvé${f.length>1?"s":""}`:"";
-  $("list").innerHTML=f.length?f.slice(0,shown).map(r=>`<article class="card"><h3>${esc(r.n)}</h3>
+  $("list").innerHTML=f.length?f.slice((page-1)*PER,page*PER).map(r=>`<article class="card"><h3>${esc(r.n)}</h3>
     <div class="loc">${esc(r.v)}${r.cp?" ("+esc(r.cp)+")":""}${r.d&&DEPTS[r.d]?" · "+esc(DEPTS[r.d]):""}</div>
     <div class="links">${r.site?`<a href="${esc(url(r.site))}" target="_blank" rel="noopener nofollow">Site web</a>`:""}${r.tel?`<a href="tel:${esc(r.tel.replace(/\s/g,""))}" target="_blank" rel="noopener">${esc(r.tel)}</a>`:""}${r.mail?`<a href="mailto:${esc(r.mail)}" target="_blank" rel="noopener" data-mail="${esc(r.mail)}">E-mail</a>`:""}</div></article>`).join(""):`<div class="empty" style="grid-column:1/-1">Aucun loueur trouvé pour cette recherche. Essayez une ville voisine ou le département.</div>`;
-  $("more").hidden=f.length<=shown;
+  drawPager(f.length);
 }
-$("q").addEventListener("input",e=>{q=e.target.value;shown=48;render()});
-$("reg").addEventListener("change",e=>{reg=e.target.value;shown=48;drawChips();drawDeps();render()});
-$("dep").addEventListener("change",e=>{dep=e.target.value;shown=48;render()});
-$("chips").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;reg=b.dataset.r;$("reg").value=reg;shown=48;drawChips();drawDeps();render()});
-$("more").addEventListener("click",()=>{shown+=48;render()});
+$("q").addEventListener("input",e=>{q=e.target.value;page=1;render()});
+$("reg").addEventListener("change",e=>{reg=e.target.value;page=1;drawChips();drawDeps();render()});
+$("dep").addEventListener("change",e=>{dep=e.target.value;page=1;render()});
+$("chips").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;reg=b.dataset.r;$("reg").value=reg;page=1;drawChips();drawDeps();render()});
+function drawPager(n){const pages=Math.ceil(n/PER),el=$("pager");if(pages<=1){el.innerHTML="";return}
+  if(page>pages)page=pages;
+  const nums=new Set([1,pages,page-1,page,page+1].filter(x=>x>=1&&x<=pages));const list=[...nums].sort((a,b)=>a-b);
+  let h=`<button class="pg" data-p="${page-1}" ${page===1?"disabled":""} aria-label="Page précédente">‹ Précédent</button>`,last=0;
+  list.forEach(x=>{if(x-last>1)h+=`<span class="gap">…</span>`;h+=`<button class="pg num-p" data-p="${x}" ${x===page?'aria-current="page"':""}>${x}</button>`;last=x});
+  h+=`<button class="pg" data-p="${page+1}" ${page===pages?"disabled":""} aria-label="Page suivante">Suivant ›</button>`;
+  el.innerHTML=h+`<span class="pginfo">Page ${page} sur ${pages}</span>`}
+$("pager").addEventListener("click",e=>{const b=e.target.closest("button[data-p]");if(!b||b.disabled)return;page=+b.dataset.p;render();
+  const c=$("count");try{c.scrollIntoView({behavior:"smooth",block:"start"})}catch(_){}});
 /* ---------- carte ---------- */
 const FR=[[2.37,51.05],[2.55,51.09],[2.9,50.7],[3.15,50.78],[3.29,50.52],[3.67,50.35],[4.03,50.36],[4.17,50.05],[4.83,50.17],[4.86,49.8],[5.4,49.62],[5.82,49.55],[6.37,49.47],[6.73,49.17],[7.05,49.12],[7.44,49.18],[7.63,49.05],[8.2,48.97],[7.8,48.5],[7.57,48.1],[7.58,47.59],[7.0,47.45],[6.86,47.16],[6.43,46.93],[6.11,46.58],[6.15,46.37],[5.97,46.22],[6.3,46.4],[6.8,46.4],[6.85,46.13],[7.04,45.93],[6.8,45.65],[7.14,45.25],[6.63,45.11],[7.07,44.69],[6.85,44.42],[7.0,44.23],[7.67,44.17],[7.53,43.78],[7.27,43.7],[6.92,43.43],[6.63,43.16],[6.2,43.11],[5.93,43.1],[5.37,43.21],[5.05,43.33],[4.55,43.42],[4.13,43.53],[3.7,43.4],[3.25,43.25],[3.05,42.95],[3.03,42.52],[3.17,42.43],[2.65,42.34],[1.97,42.43],[1.72,42.5],[1.44,42.6],[0.68,42.84],[0.0,42.69],[-0.31,42.84],[-0.75,42.95],[-1.38,43.03],[-1.78,43.37],[-1.52,43.53],[-1.26,44.6],[-1.17,45.2],[-1.08,45.58],[-1.25,45.85],[-1.15,46.15],[-1.8,46.5],[-2.15,46.9],[-2.55,47.28],[-2.48,47.5],[-3.0,47.55],[-3.55,47.73],[-4.35,47.8],[-4.72,48.05],[-4.57,48.35],[-4.77,48.52],[-4.2,48.7],[-3.58,48.8],[-3.0,48.83],[-2.3,48.65],[-2.0,48.64],[-1.57,48.62],[-1.6,49.21],[-1.85,49.7],[-1.27,49.69],[-1.17,49.37],[-0.2,49.3],[0.1,49.45],[0.2,49.7],[1.2,49.95],[1.6,50.25],[1.6,50.75],[1.85,50.95]];
 const CORSE=[[9.4,43.0],[9.48,42.7],[9.55,42.12],[9.28,41.6],[9.16,41.37],[8.8,41.58],[8.6,41.9],[8.72,42.25],[8.57,42.38],[9.0,42.65],[9.32,42.71],[9.36,43.0]];
@@ -132,7 +147,7 @@ function drawMap(){svg.querySelectorAll(".dot").forEach(c=>{const d=c.dataset.d;
   c.classList.toggle("on",d===dep);
   c.classList.toggle("dim",(!!dep&&d!==dep)||(!!reg&&depReg[d]!==reg))})}
 function pickDep(d){dep=(dep===d)?"":d;if(dep&&depReg[dep]&&reg&&reg!==depReg[dep]){reg=depReg[dep];$("reg").value=reg;drawChips()}
-  shown=48;drawDeps();$("dep").value=dep;render();drawMap()}
+  page=1;drawDeps();$("dep").value=dep;render();drawMap()}
 svg.addEventListener("click",e=>{const c=e.target.closest(".dot");if(c)pickDep(c.dataset.d)});
 svg.addEventListener("keydown",e=>{const c=e.target.closest(".dot");if(c&&(e.key==="Enter"||e.key===" ")){e.preventDefault();pickDep(c.dataset.d)}});
 const tip=$("tip"),box=$("mapbox");
