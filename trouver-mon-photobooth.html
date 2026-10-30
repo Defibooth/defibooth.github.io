@@ -150,7 +150,7 @@ svg.addEventListener("keydown",e=>{const c=e.target.closest(".dot");if(c&&(e.key
 const tip=$("tip"),box=$("mapbox");
 svg.addEventListener("mousemove",e=>{const c=e.target.closest(".dot");if(!c){tip.hidden=true;return}
   const b=box.getBoundingClientRect();tip.textContent=`${c.dataset.d} – ${DEPTS[c.dataset.d]} : ${cnt[c.dataset.d]} loueur${cnt[c.dataset.d]>1?"s":""}`;
-  tip.style.left=(e.clientX-b.left)+"px";tip.style.top=(e.clientY-b.top)+"px";tip.hidden=false});
+  const zz=parseFloat(document.documentElement.style.zoom)||1;tip.style.left=(e.clientX-b.left)/zz+"px";tip.style.top=(e.clientY-b.top)/zz+"px";tip.hidden=false});
 svg.addEventListener("mouseleave",()=>tip.hidden=true);
 ["reg","dep"].forEach(id=>$(id).addEventListener("change",drawMap));
 $("chips").addEventListener("click",drawMap);
@@ -161,6 +161,13 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-mail]");i
   const done=ok=>toast(ok?`Adresse copiée : <b>${esc(m)}</b>`:`Adresse e-mail : <b>${esc(m)}</b>`);
   try{navigator.clipboard.writeText(m).then(()=>done(true),()=>done(false))}catch(_){done(false)}});
 drawChips();drawDeps();render();drawMap();
+/* Wix agrandit le cadre avec la largeur de l'écran : on agrandit le contenu pour le remplir (ordinateur uniquement) */
+const H0=document.querySelector(".wrap").offsetHeight;
+function fit(){const s=document.documentElement.style;
+  if(window.innerWidth<900){s.zoom="";return}
+  const z=Math.max(1,Math.min(window.innerHeight/H0,window.innerWidth/1132,1.8));
+  s.zoom=z>1.02?String(z):""}
+fit();addEventListener("resize",fit);
 </script>
 </body>
 </html>
