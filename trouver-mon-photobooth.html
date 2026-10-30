@@ -8,14 +8,14 @@
 <meta name="description" content="Annuaire des loueurs de photobooth en France : trouvez un photobooth près de chez vous, par région, département ou ville.">
 <style>
 :root{--bg:transparent;--fg:#1a1a1a;--muted:#4d4d4d;--line:#efe4d8;--soft:#fdfbf7;--navy:#173a7a;--accent:#173a7a;--accent-soft:#e8eef8;--orange:#c43d22;--yellow:#ffd200;--blue:#0897de;--r:18px}
-*{box-sizing:border-box}
+*{box-sizing:border-box}[hidden]{display:none!important}
 html,body{background:transparent}body{margin:0;background:var(--bg);color:var(--fg);font-family:"Wix Madefor Text",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.45}
-.wrap{max-width:1100px;margin:0 auto;padding:24px 16px 48px}
+.wrap{max-width:1100px;margin:0 auto;padding:8px 16px 24px}
 .eyebrow{text-align:center;color:var(--orange);font-family:"Wix Madefor Display",sans-serif;font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:clamp(18px,2.4vw,28px);margin:8px 0 6px}
 h1{font-family:"Wix Madefor Display",sans-serif;text-align:center;color:var(--navy);font-size:clamp(30px,4.6vw,52px);font-weight:700;margin:0 0 12px;letter-spacing:-.01em;line-height:1.1}
 .lead{margin:0 auto 28px;color:var(--muted);max-width:62ch;text-align:center;font-size:17px}
 h3{font-family:"Wix Madefor Display",sans-serif}
-.tools{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;margin-bottom:12px}
+.tools{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;margin-bottom:20px}
 @media(max-width:700px){.tools{grid-template-columns:1fr}.regions{display:none}}
 input,select{font:inherit;width:100%;padding:12px 16px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--fg)}
 input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
@@ -61,16 +61,13 @@ input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px;bord
 </head>
 <body>
 <div class="wrap">
-  <p class="eyebrow">Annuaire</p>
-  <h1>Trouver mon photobooth</h1>
-  <p class="lead">L'annuaire des loueurs de photobooth en France. Cherchez par ville, code postal ou nom, ou choisissez votre région et votre département.</p>
 
   <div class="tools">
     <input id="q" type="search" placeholder="Ville, code postal ou nom du loueur…" aria-label="Rechercher">
     <select id="reg" aria-label="Région"><option value="">Toutes les régions</option></select>
     <select id="dep" aria-label="Département"><option value="">Tous les départements</option></select>
   </div>
-  <div class="regions" id="chips"></div>
+  <div class="regions" id="chips" hidden></div>
   <div class="layout">
     <div class="mapbox" id="mapbox">
       <svg id="map" role="img" aria-label="Carte de France des loueurs de photobooth par département"></svg>
